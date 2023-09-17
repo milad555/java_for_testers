@@ -12,7 +12,7 @@ public class Triangle {
     }
 
     public static void printTriangleArea(double a, double b, double c ){
-        String text = String.format("Площадь треугольника со сторонами %f, %f , %f  = %f ",a, b, c tArea(a,b,c) );
+        String text = String.format("Площадь треугольника со сторонами %f, %f , %f  = %f ",a, b, c, tArea(a,b,c) );
     }
 
     public double tArea(){
