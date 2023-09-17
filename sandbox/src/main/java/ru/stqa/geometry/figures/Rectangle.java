@@ -7,6 +7,7 @@ public class Rectangle {
     }
 
     private static double rectangleArea(double a, double b) {
+
         return a * b;
     }
 }
