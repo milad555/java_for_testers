@@ -18,8 +18,10 @@ public class TriangleTests {
 
     @Test
     void canCalcPerimeter(){
+        double extRes = 6;
         var p = new Triangle(2,2,2);
         Assertions.assertEquals(6, p.tPerimeter());
-
+        System.out.println("Expected 6result = " + extRes);
+        System.out.println("Actual result = " + p.tPerimeter());
     }
 }

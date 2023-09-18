@@ -11,8 +11,9 @@ public class Triangle {
         this.side3 = side3;
     }
 
-    public static void printTriangleArea(double a, double b, double c ){
-        String text = String.format("Площадь треугольника со сторонами %f, %f , %f  = %f ",a, b, c, tArea(a,b,c) );
+    public static void printTriangleArea(Triangle a){
+        String text = String.format("Площадь треугольника со сторонами %f, %f , %f  = %f ",a.side1, a.side2, a.side3, a.tArea());
+        System.out.println(text);
     }
 
     public double tArea(){
@@ -23,5 +24,8 @@ public class Triangle {
     public double tPerimeter(){
         return this.side1 + this.side2 + this.side3;
     }
-
+    public static void printTrianglePerimeter(Triangle a){
+        String text = String.format("Площадь треугольника со сторонами %f, %f , %f  = %f ",a.side1, a.side2, a.side3, a.tPerimeter());
+        System.out.println(text);
+    }
 }
