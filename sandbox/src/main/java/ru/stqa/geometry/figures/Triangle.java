@@ -1,6 +1,10 @@
 package ru.stqa.geometry.figures;
 
-public record Triangle( double a, double b, double c) {
+public record Triangle(
+        double a,
+        double b,
+        double c
+) {
 
 
     public static void printTriangleArea(Triangle a){
@@ -9,7 +13,7 @@ public record Triangle( double a, double b, double c) {
     }
 
     public double tArea(){
-        double p = 0.5 * (this.a + this.b + this.c);
+        double p = 0.5 * tPerimeter();
         return Math.sqrt(p * ((p - this.a) * (p - this.b) * (p - this.c)));
     }
 
