@@ -23,7 +23,7 @@ public class TestBase {
       driver.findElement(By.name("lastname")).click();
       driver.findElement(By.name("lastname")).sendKeys(contact.lastName());
       driver.findElement(By.name("address")).click();
-      driver.findElement(By.name("address")).sendKeys(contact.street());
+      driver.findElement(By.name("address")).sendKeys(contact.address());
       driver.findElement(By.name("home")).click();
       driver.findElement(By.name("home")).sendKeys(contact.cellPhone());
       driver.findElement(By.name("email")).click();

@@ -17,9 +17,20 @@ public class ContactCreationTests extends TestBase {
   }
 
   @Test
-  public void canAddContactWithAddressOnly() {
+  public void canAddContactWithEmailOnly() {
     openAddNewContactPage();
     createContact(new ContactData().withEmailOnly("email@test.com"));
   }
 
+  @Test
+  public void canAddContactWithPhonelOnly() {
+    openAddNewContactPage();
+    createContact(new ContactData().withPhoneOnly("555-55-55"));
+  }
+
+  @Test
+  public void canAddContactWithAddresslOnly() {
+    openAddNewContactPage();
+    createContact(new ContactData().withAddressOnly("100 Las Palmas"));
+  }
 }
