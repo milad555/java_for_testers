@@ -4,7 +4,7 @@ import model.ContactData;
 import org.junit.jupiter.api.Test;
 
 
-public class ContactDeletionGroupTests extends TestBase {
+public class ContactDeletionTests extends TestBase {
 
     @Test
     public void canDeleteContact() {
