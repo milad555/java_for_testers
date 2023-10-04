@@ -14,15 +14,15 @@ public record ContactData(String firstName,
         return new ContactData(firstName, lastName, this.address, this.cellPhone, this.email);
     }
 
-    public ContactData withEmailOnly(String email) {
+    public ContactData withEmail(String email) {
         return new ContactData(this.firstName, this.lastName, this.address, this.cellPhone, email);
     }
 
-    public ContactData withPhoneOnly(String cellPhone) {
+    public ContactData withPhone(String cellPhone) {
         return new ContactData(this.firstName, this.lastName, this.address, cellPhone, this.email);
     }
 
-    public ContactData withAddressOnly(String address) {
+    public ContactData withAddress(String address) {
         return new ContactData(this.firstName, this.lastName, address, this.cellPhone, this.email);
     }
 }
