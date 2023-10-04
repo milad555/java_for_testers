@@ -3,44 +3,62 @@ package manager;
 import model.ContactData;
 import org.openqa.selenium.By;
 
-public class ContactHelper {
-    private final ApplicationManager manager;
+public class ContactHelper  extends HelperBase{
 
     public ContactHelper(ApplicationManager manager) {
-        this.manager = manager;
+        super(manager);
     }
 
     public void createContact(ContactData contact) {
+        openAddNewContactPage();
+        fillContactForm(contact);
+        submitContactCreation();
+    }
 
-        manager.driver.findElement(By.name("firstname")).click();
-        manager.driver.findElement(By.name("firstname")).sendKeys(contact.firstName());
-        manager.driver.findElement(By.name("lastname")).click();
-        manager.driver.findElement(By.name("lastname")).sendKeys(contact.lastName());
-        manager.driver.findElement(By.name("address")).click();
-        manager.driver.findElement(By.name("address")).sendKeys(contact.address());
-        manager.driver.findElement(By.name("home")).click();
-        manager.driver.findElement(By.name("home")).sendKeys(contact.cellPhone());
-        manager.driver.findElement(By.name("email")).click();
-        manager.driver.findElement(By.name("email")).sendKeys(contact.email());
-        manager.driver.findElement(By.xpath("(//input[@name=\'submit\'])[2]")).click();
+    private void fillContactForm(ContactData contact) {
+        type(By.name("firstname"),contact.firstName());
+        type(By.name("lastname"),contact.lastName());
+        type(By.name("address"),contact.address());
+        type(By.name("home"),contact.cellPhone());
+        type(By.name("email"),contact.email());
+    }
+
+    private void submitContactCreation() {
+        click(By.xpath("(//input[@name=\'submit\'])[2]"));
     }
 
     public void removeContact() {
-        manager.driver.get("http://localhost/addressbook/index.php");
-        manager.driver.findElement(By.name("selected[]")).click();
-        manager.driver.findElement(By.xpath("//input[@value=\'Delete\']")).click();
+        openPage("http://localhost/addressbook/index.php");
+        selectContact();
+        removeSelectedContact();
+        openPage("http://localhost/addressbook/index.php");
+    }
+
+    private void removeSelectedContact() {
+        click(By.xpath("//input[@value=\'Delete\']"));
+        acceptAlert();
+    }
+
+    private void acceptAlert() {
         manager.driver.switchTo().alert().accept();
-        manager.driver.get("http://localhost/addressbook/index.php");
+    }
+
+    private void selectContact() {
+        click(By.name("selected[]"));
+    }
+
+    private void openPage(String page) {
+        manager.driver.get(page);
     }
 
     public void openAddNewContactPage() {
         if (!manager.isElementPresent(By.name("submit"))) {
-            manager.driver.findElement(By.linkText("add new")).click();
+            openPage("http://localhost/addressbook/edit.php");
         }
     }
 
     public boolean isContactPresent() {
-        manager.driver.get("http://localhost/addressbook/index.php");
+      openPage("http://localhost/addressbook/index.php");
         return !manager.isElementPresent(By.name("selected[]"));
     }
 }
