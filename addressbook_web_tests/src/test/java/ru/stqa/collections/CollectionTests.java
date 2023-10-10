@@ -1,6 +1,5 @@
 package ru.stqa.collections;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +8,7 @@ import java.util.List;
 
 public class CollectionTests {
     @Test
-    void arrrayTests(){
+    void arrayTests(){
         var array = new String[]{"a", "b", "c"};
         Assertions.assertEquals(3, array.length);
         array[0] = "a";
@@ -27,5 +26,6 @@ public class CollectionTests {
 
         list.set(0, "d");
         Assertions.assertEquals("d", list.get(0));
+        System.out.println("List: " + list.get(1));
     }
 }

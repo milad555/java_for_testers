@@ -30,11 +30,11 @@ public class ContactHelper  extends HelperBase{
     public void removeContact() {
         openPage("http://localhost/addressbook/index.php");
         selectContact();
-        removeSelectedContact();
+        removeSelectedContacts();
         openPage("http://localhost/addressbook/index.php");
     }
 
-    private void removeSelectedContact() {
+    private void removeSelectedContacts() {
         click(By.xpath("//input[@value=\'Delete\']"));
         acceptAlert();
     }
@@ -57,8 +57,28 @@ public class ContactHelper  extends HelperBase{
         }
     }
 
-    public boolean isContactPresent() {
-      openPage("http://localhost/addressbook/index.php");
-        return !manager.isElementPresent(By.name("selected[]"));
+
+    public void removeAllContacts() {
+        openContactPage();
+        selectAllContacts();
+        removeSelectedContacts();
+    }
+
+    private void selectAllContacts() {
+        var checkboxes = manager.driver.findElements(By.name("selected[]"));
+        for (var checkbox : checkboxes){
+            checkbox.click();
+        }
+    }
+
+    private void openContactPage() {
+        if (!manager.isElementPresent(By.name("MainForm"))){
+            openPage("http://localhost/addressbook/index.php");
+        }
+    }
+
+    public int getContactCount() {
+        openContactPage();
+        return manager.driver.findElements(By.name("selected[]")).size();
     }
 }

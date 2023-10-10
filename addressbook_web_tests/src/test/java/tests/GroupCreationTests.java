@@ -2,10 +2,7 @@ package tests;
 
 import model.GroupData;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
@@ -27,7 +24,7 @@ public class GroupCreationTests extends TestBase {
         return result;
     }
 
-    public static List<GroupData> negativegroupProvider() {
+    public static List<GroupData> negativeGroupProvider() {
         var result = new ArrayList<GroupData>(List.of(
                 new GroupData("group name'", "", "")));
         return result;
@@ -43,7 +40,7 @@ public class GroupCreationTests extends TestBase {
     }
 
     @ParameterizedTest
-    @MethodSource("negativegroupProvider")
+    @MethodSource("negativeGroupProvider")
     public void canNotCreateGroup(GroupData group) {
         int groupCount = app.groups().getCount();
         app.groups().createGroup(group);
