@@ -1,6 +1,7 @@
 package tests;
 
 import model.ContactData;
+import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,14 +18,18 @@ public class ContactCreationTests extends TestBase {
                 for (var address : List.of("", "1 Lincoln st")) {
                     for (var cellPhone : List.of("", " 121-32-43")) {
                         for (var email : List.of("", "apple@apple.com")) {
-                            result.add((new ContactData(firstName, lastName, address, cellPhone, email)));
+                            result.add((new ContactData().withFirstName(firstName).withLastName(lastName).withAddress(address).withPhone(cellPhone).withEmail(email)));
                         }
                     }
                 }
             }
         }
             for (int i = 0; i < 5; i++) {
-                result.add((new ContactData(randomString(i * 5), randomString(i * 5), randomString(i * 5), randomString(i * 5), randomString(i * 5))));
+                result.add(new ContactData()
+                        .withFirstName(randomString(i * 5))
+                        .withLastName(randomString(i * 5)).withAddress(randomString(i * 5))
+                        .withPhone(randomString(i * 5))
+                        .withEmail(randomString(i * 5)));
             }
             return result;
         }
