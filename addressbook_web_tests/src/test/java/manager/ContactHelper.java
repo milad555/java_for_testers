@@ -89,14 +89,31 @@ public class ContactHelper  extends HelperBase{
     public List<ContactData> getContactList() {
         openContactPage();
         var contacts = new ArrayList<ContactData>();
-        var tds = manager.driver.findElements(By.cssSelector("td.center"));
-        for (var td : tds){
-            var name = td.getText();
-            var checkBox = td.findElement(By.name("selected[]"));
+        var trs = manager.driver.findElements(By.xpath("//tr[@name='entry']"));
+        for (var tr : trs){
+            //var name = tr.getText();
+            var checkBox = tr.findElement(By.name("selected[]"));
             var id = checkBox.getAttribute("value");
+            var name = manager.driver.findElement(By.xpath("(//input[@value='"+ id +"']/../../td)[last()-7]")).getText();
             contacts.add(new ContactData().withId(id).withFirstName(name));
         }
         return contacts;
 
+    }
+
+    public void modifyContact(ContactData contact, ContactData modifiedContact) {
+        openContactPage();
+        initContactModification(contact);
+        fillContactForm(modifiedContact);
+        submitContactModification();
+        openContactPage();
+    }
+
+    private void submitContactModification() {
+        click(By.xpath("(//input[@value='Update'])[1]"));
+    }
+
+    private void initContactModification(ContactData contact) {
+        click(By.xpath(String.format("//input[@value='%s']/../..//*[@title='Edit']",contact.id())));
     }
 }
