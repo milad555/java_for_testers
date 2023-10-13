@@ -38,13 +38,6 @@ public class ContactCreationTests extends TestBase {
         @ParameterizedTest
         @MethodSource("contactProvider")
         public void canCreateMultipleContacts (ContactData contact){
-//            int contactCount = app.contacts().getContactCount();
-//            app.contacts().createContact((contact));
-//            int newContactCount = app.contacts().getContactCount();
-//            Assertions.assertEquals(contactCount + 1, newContactCount);
-
-
-
             var oldContacts = app.contacts().getContactList();
             app.contacts().createContact(contact);
             var newContacts = app.contacts().getContactList();
