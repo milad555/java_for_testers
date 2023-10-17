@@ -1,6 +1,8 @@
-package manager;
+package ru.stqa.addressbook.manager;
 
 import org.openqa.selenium.By;
+
+import java.nio.file.Paths;
 
 public class HelperBase {
     protected final ApplicationManager manager;
@@ -14,7 +16,9 @@ public class HelperBase {
         manager.driver.findElement(locator).clear();
         manager.driver.findElement(locator).sendKeys(text);
     }
-
+    protected void attach(By locator, String file) {
+        manager.driver.findElement(locator).sendKeys(Paths.get(file).toAbsolutePath().toString());
+    }
     protected void click(By locator) {
         manager.driver.findElement(locator).click();
     }
