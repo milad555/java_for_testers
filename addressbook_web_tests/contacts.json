@@ -1,0 +1,25 @@
+[ {
+  "id" : "",
+  "firstName" : "",
+  "lastName" : "",
+  "address" : "",
+  "cellPhone" : "",
+  "email" : "",
+  "photo" : "src/test/resources/images/avatar.png"
+}, {
+  "id" : "",
+  "firstName" : "mpfct",
+  "lastName" : "mspgn",
+  "address" : "uedhr",
+  "cellPhone" : "sntzf",
+  "email" : "jlkxx",
+  "photo" : "src/test/resources/images/avatar.png"
+}, {
+  "id" : "",
+  "firstName" : "gmycbnsudo",
+  "lastName" : "soaptoxfha",
+  "address" : "klvpkoufxb",
+  "cellPhone" : "cyahcujzhd",
+  "email" : "xnhedguawa",
+  "photo" : "src/test/resources/images/emmys2022.jpg"
+} ]

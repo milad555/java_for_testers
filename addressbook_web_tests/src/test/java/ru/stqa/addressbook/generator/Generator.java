@@ -7,15 +7,19 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import org.yaml.snakeyaml.Yaml;
+import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.manager.GroupHelper;
+import ru.stqa.addressbook.model.ContactData;
 import ru.stqa.addressbook.model.GroupData;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static ru.stqa.addressbook.common.CommonFunctions.randomString;
+import static ru.stqa.addressbook.tests.TestBase.randomFile;
 
 public class Generator {
 
@@ -51,13 +55,15 @@ public class Generator {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             var json = mapper.writeValueAsString(data);
-            try (var writer = new FileWriter(output)){
+            try (var writer = new FileWriter(output)) {
                 writer.write(json);
             }
-        } if ("yaml".equals(format)){
+        }
+        if ("yaml".equals(format)) {
             var mapper = new YAMLMapper();
             mapper.writeValue(new File(output), data);
-        } if ("xml".equals(format)){
+        }
+        if ("xml".equals(format)) {
             var mapper = new XmlMapper();
             mapper.writeValue(new File(output), data);
         } else {
@@ -78,7 +84,17 @@ public class Generator {
     }
 
     private Object generateContacts() {
-        return null;
+        var result = new ArrayList<ContactData>();
+        for (int i = 0; i < count; i++) {
+            result.add(new ContactData()
+                    .withFirstName(randomString(i * 5))
+                    .withLastName(randomString(i * 5))
+                    .withAddress(randomString(i * 5))
+                    .withPhone(randomString(i * 5))
+                    .withEmail(randomString(i * 5))
+                    .withPhoto(randomFile("src/test/resources/images")));
+        }
+        return result;
     }
 
 
