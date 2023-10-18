@@ -2,15 +2,17 @@ package ru.stqa.addressbook.manager;
 
 import ru.stqa.addressbook.model.ContactData;
 import org.openqa.selenium.By;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-public class ContactHelper  extends HelperBase{
+public class ContactHelper extends HelperBase {
+    private Properties properties;
 
     public ContactHelper(ApplicationManager manager) {
         super(manager);
     }
+
 
     public void createContact(ContactData contact) {
         openAddNewContactPage();
@@ -19,11 +21,11 @@ public class ContactHelper  extends HelperBase{
     }
 
     private void fillContactForm(ContactData contact) {
-        type(By.name("firstname"),contact.firstName());
-        type(By.name("lastname"),contact.lastName());
-        type(By.name("address"),contact.address());
-        type(By.name("home"),contact.cellPhone());
-        type(By.name("email"),contact.email());
+        type(By.name("firstname"), contact.firstName());
+        type(By.name("lastname"), contact.lastName());
+        type(By.name("address"), contact.address());
+        type(By.name("home"), contact.cellPhone());
+        type(By.name("email"), contact.email());
         attach(By.name("photo"), contact.photo());
     }
 
@@ -32,10 +34,10 @@ public class ContactHelper  extends HelperBase{
     }
 
     public void removeContact(ContactData contact) {
-        openPage("http://localhost/addressbook/index.php");
+        openPage("web.baseUrl");
         selectContact(contact);
         removeSelectedContacts();
-        openPage("http://localhost/addressbook/index.php");
+        openPage("web.baseUrl");
     }
 
     private void removeSelectedContacts() {
@@ -51,13 +53,13 @@ public class ContactHelper  extends HelperBase{
         click(By.cssSelector(String.format("input[value='%s']", contact.id())));
     }
 
-    private void openPage(String page) {
-        manager.driver.get(page);
+    private void openPage(String propName) {
+        manager.driver.get(manager.properties.getProperty(propName));
     }
 
     public void openAddNewContactPage() {
         if (!manager.isElementPresent(By.name("submit"))) {
-            openPage("http://localhost/addressbook/edit.php");
+            openPage("web.contactEdit");
         }
     }
 
@@ -70,14 +72,14 @@ public class ContactHelper  extends HelperBase{
 
     private void selectAllContacts() {
         var checkboxes = manager.driver.findElements(By.name("selected[]"));
-        for (var checkbox : checkboxes){
+        for (var checkbox : checkboxes) {
             checkbox.click();
         }
     }
 
     private void openContactPage() {
-        if (!manager.isElementPresent(By.name("MainForm"))){
-            openPage("http://localhost/addressbook/index.php");
+        if (!manager.isElementPresent(By.name("MainForm"))) {
+            openPage("web.baseUrl");
         }
     }
 
@@ -90,11 +92,11 @@ public class ContactHelper  extends HelperBase{
         openContactPage();
         var contacts = new ArrayList<ContactData>();
         var trs = manager.driver.findElements(By.xpath("//tr[@name='entry']"));
-        for (var tr : trs){
-            //var name = tr.getText();
+        for (var tr : trs) {
+           // var name = tr.getText();
             var checkBox = tr.findElement(By.name("selected[]"));
             var id = checkBox.getAttribute("value");
-            var name = manager.driver.findElement(By.xpath("(//input[@value='"+ id +"']/../../td)[last()-7]")).getText();
+            var name = manager.driver.findElement(By.xpath("(//input[@value='" + id + "']/../../td)[last()-7]")).getText();
             contacts.add(new ContactData().withId(id).withFirstName(name));
         }
         return contacts;
@@ -114,7 +116,7 @@ public class ContactHelper  extends HelperBase{
     }
 
     private void initContactModification(ContactData contact) {
-        click(By.xpath(String.format("//input[@value='%s']/../..//*[@title='Edit']",contact.id())));
+        click(By.xpath(String.format("//a[@href='edit.php?id=%s']", contact.id())));
     }
 
 }

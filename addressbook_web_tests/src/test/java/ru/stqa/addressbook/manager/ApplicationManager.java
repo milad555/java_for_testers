@@ -14,7 +14,7 @@ public class ApplicationManager {
     private LoginHelper session;
     private GroupHelper groups;
     public ContactHelper contacts;
-    private Properties properties;
+    public Properties properties;
 
 
     public void init(String browser, Properties properties) {
