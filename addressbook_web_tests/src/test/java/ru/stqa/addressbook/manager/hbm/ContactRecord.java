@@ -1,6 +1,7 @@
 package ru.stqa.addressbook.manager.hbm;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,12 +15,19 @@ public class ContactRecord {
     public String firstname;
     public String lastname;
     public String address;
+    @Column(name = "home")
+    public String phone;
+    public String email;
+
 
     public ContactRecord() {}
-    public ContactRecord(int id, String firstname, String lastname, String address){
+
+    public ContactRecord(int id, String firstname, String lastname, String address, String phone, String email){
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.address = address;
+        this.phone = phone;
+        this.email = email;
     }
 }

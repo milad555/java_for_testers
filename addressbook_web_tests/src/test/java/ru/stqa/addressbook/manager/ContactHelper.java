@@ -7,10 +7,8 @@ import ru.stqa.addressbook.model.GroupData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class ContactHelper extends HelperBase {
-    private Properties properties;
 
     public ContactHelper(ApplicationManager manager) {
         super(manager);
@@ -30,8 +28,13 @@ public class ContactHelper extends HelperBase {
         submitContactCreation();
     }
 
-    private void selectGroup(GroupData group) {
-       new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
+    public void selectGroup(GroupData group) {
+        if (manager.driver.getCurrentUrl().contains("edit.php")) {
+            new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
+        }else {
+            new Select(manager.driver.findElement(By.name("group"))).selectByValue(group.id());
+        }
+
     }
 
     private void fillContactForm(ContactData contact) {
@@ -40,7 +43,7 @@ public class ContactHelper extends HelperBase {
         type(By.name("address"), contact.address());
         type(By.name("home"), contact.cellPhone());
         type(By.name("email"), contact.email());
-        attach(By.name("photo"), contact.photo());
+        // attach(By.name("photo"), contact.photo());
     }
 
     private void submitContactCreation() {
@@ -67,7 +70,7 @@ public class ContactHelper extends HelperBase {
         click(By.cssSelector(String.format("input[value='%s']", contact.id())));
     }
 
-    private void openPage(String propName) {
+    public void openPage(String propName) {
         manager.driver.get(manager.properties.getProperty(propName));
     }
 
@@ -110,7 +113,7 @@ public class ContactHelper extends HelperBase {
             var name = tr.findElement(By.xpath(".//td[3]")).getText();
             var checkBox = tr.findElement(By.name("selected[]"));
             var id = checkBox.getAttribute("value");
-           // var name = manager.driver.findElement(By.xpath("(//input[@value='" + id + "']/../../td)[last()-7]")).getText();
+            // var name = manager.driver.findElement(By.xpath("(//input[@value='" + id + "']/../../td)[last()-7]")).getText();
             contacts.add(new ContactData().withId(id).withFirstName(name));
         }
         return contacts;
@@ -133,4 +136,23 @@ public class ContactHelper extends HelperBase {
         click(By.xpath(String.format("//a[@href='edit.php?id=%s']", contact.id())));
     }
 
+    public int getContactsInGroup(GroupData group) {
+        openContactPage();
+        selectGroup(group);
+        return getNumberOfContactsInGroup();
+    }
+
+    private int getNumberOfContactsInGroup() {
+        return manager.driver.findElements(By.xpath("//tr[@name='entry']")).size();
+    }
+
+    public void deleteContactFromGroup(GroupData group) throws InterruptedException {
+        openPage("web.baseUrl");
+        selectGroup(group);
+        click(By.xpath("(//input[@type='checkbox'])[1]"));
+        click(By.xpath("//input[@value='Delete']"));
+        acceptAlert();
+        Thread.sleep(500);
+
+    }
 }

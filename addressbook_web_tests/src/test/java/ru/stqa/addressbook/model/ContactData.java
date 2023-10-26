@@ -1,6 +1,7 @@
 package ru.stqa.addressbook.model;
 
-public record ContactData(String id, String firstName,
+public record ContactData(String id,
+                          String firstName,
                           String lastName,
                           String address,
                           String cellPhone,

@@ -2,8 +2,6 @@ package ru.stqa.addressbook.tests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
@@ -16,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,51 +33,62 @@ public class ContactCreationTests extends TestBase {
 //                }
 //            }
 //        }
-        var json ="";
+        var json = "";
         try (var reader = new FileReader("contacts.json");
              var breader = new BufferedReader(reader)
-        ){
+        ) {
             var line = breader.readLine();
-            while (line != null){
+            while (line != null) {
                 json = json + line;
                 line = breader.readLine();
             }
         }
 
-       // var json = Files.readString(Paths.get("contacts.json"));
         ObjectMapper mapper = new ObjectMapper();
 
-        var value = mapper.readValue(new File("contacts.json"), new TypeReference<List<ContactData>>(){});
+        var value = mapper.readValue(new File("contacts.json"), new TypeReference<List<ContactData>>() {
+        });
         result.addAll(value);
-            return result;
-        }
-        @ParameterizedTest
-        @MethodSource("contactProvider")
-        public void canCreateMultipleContacts (ContactData contact){
-            var oldContacts = app.contacts().getContactList();
-            app.contacts().createContact(contact);
-            var newContacts = app.contacts().getContactList();
-            Comparator<ContactData> compareById = (o1, o2) -> {
-                return   Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
-            };
-            newContacts.sort(compareById);
-            var expectedList = new ArrayList<>(oldContacts);
-            expectedList.add(contact.withId(newContacts.get(newContacts.size() - 1).id()).withLastName("").withAddress("").withPhone("").withEmail("").withPhoto(""));
-            expectedList.sort(compareById);
-            Assertions.assertEquals(newContacts, expectedList);
-        }
+        return result;
+    }
 
-        @Test
-        void canCreateContact(){
+    public static List<ContactData> singleRandomContact() throws IOException {
+        return List.of(new ContactData()
+                .withFirstName(CommonFunctions.randomString(10))
+                .withLastName(CommonFunctions.randomString(10))
+                .withAddress(CommonFunctions.randomString(10))
+                .withPhone(CommonFunctions.randomString(10))
+                .withEmail(CommonFunctions.randomString(10)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("singleRandomContact")
+    public void canCreateContact(ContactData contact) {
+        var oldContacts = app.jdbc().getContactList();
+        app.contacts().createContact(contact);
+        var newContacts = app.jdbc().getContactList();
+        Comparator<ContactData> compareById = (o1, o2) -> {
+            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        };
+        newContacts.sort(compareById);
+        var maxId = newContacts.get(newContacts.size() - 1).id();
+        var expectedList = new ArrayList<>(oldContacts);
+        expectedList.add(contact.withId(maxId));
+        expectedList.sort(compareById);
+        Assertions.assertEquals(newContacts, expectedList);
+    }
+
+    @Test
+    void canCreateContact1() {
         var contact = new ContactData()
                 .withFirstName(CommonFunctions.randomString(10))
                 .withLastName(CommonFunctions.randomString(10))
                 .withPhoto(randomFile("src/test/resources/images"));
         app.contacts().createContact(contact);
-        }
+    }
 
     @Test
-    void canCreateContactInGroup(){
+    void canCreateContactInGroup() {
         var contact = new ContactData()
                 .withFirstName(CommonFunctions.randomString(10))
                 .withLastName(CommonFunctions.randomString(10))
@@ -92,9 +99,10 @@ public class ContactCreationTests extends TestBase {
         var group = app.hbm().getGroupList().get(0);
 
         var oldRelated = app.hbm().getContactsInGroup(group);
-        app.contacts().createContact(contact,group);
+        app.contacts().createContact(contact, group);
         var newRelated = app.hbm().getContactsInGroup(group);
         Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
     }
 
-    }
+
+}
