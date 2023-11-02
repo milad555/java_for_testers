@@ -49,7 +49,7 @@ public class JdbcHelper extends HelperBase {
         var contacts = new ArrayList<ContactData>();
         try (var conn = DriverManager.getConnection("jdbc:mysql://localhost/addressbook", "root", "");
              var statement = conn.createStatement();
-             var result = statement.executeQuery("SELECT id, firstname, lastname, address, home, email  FROM addressbook")) {
+             var result = statement.executeQuery("SELECT id, firstname, lastname, address, home, email, email2, email3, home, mobile, work, phone2 FROM addressbook")) {
 
             while (result.next()) {
                 contacts.add(new ContactData()
@@ -57,8 +57,13 @@ public class JdbcHelper extends HelperBase {
                         .withFirstName(result.getString("firstname"))
                         .withLastName(result.getString("lastname"))
                         .withAddress(result.getString("address"))
-                        .withPhone(result.getString("home"))
-                        .withEmail(result.getString("email")));
+                        .withEmail(result.getString("email"))
+                        .withEmail2(result.getString("email2"))
+                        .withEmail3(result.getString("email3"))
+                        .withHome(result.getString("home"))
+                        .withMobile(result.getString("mobile"))
+                        .withWork(result.getString("work"))
+                        .withPhone2(result.getString("phone2")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

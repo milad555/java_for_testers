@@ -8,8 +8,8 @@ import ru.stqa.addressbook.manager.hbm.GroupRecord;
 import ru.stqa.addressbook.model.ContactData;
 import ru.stqa.addressbook.model.GroupData;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateHelper extends HelperBase {
     private SessionFactory sessionFactory;
@@ -30,12 +30,9 @@ public class HibernateHelper extends HelperBase {
     }
 
     static List<GroupData> convertGroupList(List<GroupRecord> records) {
-        List<GroupData> result = new ArrayList<>();
-        for (var record : records) {
-            result.add(convert(record));
-        }
-        return result;
+        return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());
     }
+
 
     private static GroupData convert(GroupRecord record) {
         return new GroupData("" + record.id, record.name, record.header, record.footer);
@@ -50,11 +47,7 @@ public class HibernateHelper extends HelperBase {
     }
 
     static List<ContactData> convertContactList(List<ContactRecord> records) {
-        List<ContactData> result = new ArrayList<>();
-        for (var record : records) {
-            result.add(convert(record));
-        }
-        return result;
+        return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());
     }
 
     private static ContactData convert(ContactRecord record) {
@@ -64,7 +57,12 @@ public class HibernateHelper extends HelperBase {
                 .withLastName(record.lastname)
                 .withAddress(record.address)
                 .withEmail(record.email)
-                .withPhone(record.phone);
+                .withEmail2(record.email2)
+                .withEmail3(record.email3)
+                .withHome(record.home)
+                .withMobile(record.mobile)
+                .withWork(record.work)
+                .withPhone2(record.phone2);
     }
 
     private static ContactRecord convert(ContactData data) {
@@ -72,12 +70,18 @@ public class HibernateHelper extends HelperBase {
         if ("".equals(id)) {
             id = "O";
         }
-        return new ContactRecord(Integer.parseInt(id),
+        return new ContactRecord(
+                Integer.parseInt(id),
                 data.firstName(),
                 data.lastName(),
                 data.address(),
-                data.cellPhone(),
-                data.email());
+                data.email(),
+                data.email2(),
+                data.email3(),
+                data.home(),
+                data.mobile(),
+                data.work(),
+                data.phone2());
     }
 
     public List<GroupData> getGroupList() {
@@ -85,7 +89,8 @@ public class HibernateHelper extends HelperBase {
             return session.createQuery("from GroupRecord", GroupRecord.class).list();
         }));
     }
-    public List<ContactData>getContactList() {
+
+    public List<ContactData> getContactList() {
         return convertContactList(sessionFactory.fromSession(session -> {
             return session.createQuery("from ContactRecord", ContactRecord.class).list();
         }));
@@ -96,6 +101,7 @@ public class HibernateHelper extends HelperBase {
             return session.createQuery("select count (*) from GroupRecord", Long.class).getSingleResult();
         });
     }
+
     public long getContactCount() {
         return sessionFactory.fromSession(session -> {
             return session.createQuery("select count (*) from ContactRecord", Long.class).getSingleResult();
@@ -123,7 +129,6 @@ public class HibernateHelper extends HelperBase {
             return convertContactList(session.get(GroupRecord.class, group.id()).contacts);
         });
     }
-
 
 
 }

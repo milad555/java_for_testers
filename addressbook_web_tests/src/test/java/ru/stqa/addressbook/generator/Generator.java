@@ -17,6 +17,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ru.stqa.addressbook.common.CommonFunctions.randomString;
 import static ru.stqa.addressbook.tests.TestBase.randomFile;
@@ -83,29 +86,21 @@ public class Generator {
 
     }
 
+    private Object generateData(Supplier<Object> dataSupplier){
+      return Stream.generate(dataSupplier).limit(count).collect(Collectors.toList());
+    }
+
     private Object generateContacts() {
-        var result = new ArrayList<ContactData>();
-        for (int i = 0; i < count; i++) {
-            result.add(new ContactData()
-                    .withFirstName(randomString(i * 5))
-                    .withLastName(randomString(i * 5))
-                    .withAddress(randomString(i * 5))
-                    .withPhone(randomString(i * 5))
-                    .withEmail(randomString(i * 5))
-                    .withPhoto(randomFile("src/test/resources/images")));
-        }
-        return result;
+        return generateData(() ->new ContactData()
+                .withFirstName(randomString(5))
+                .withLastName(randomString( 5)));
     }
 
 
     private Object generateGroups() {
-        var result = new ArrayList<GroupData>();
-        for (int i = 0; i < count; i++) {
-            result.add(new GroupData()
-                    .withName(randomString(i * 10))
-                    .withHeader(randomString(i * 10))
-                    .withFooter(randomString(i * 10)));
-        }
-        return result;
+       return generateData(() ->new GroupData()
+               .withName(randomString(10))
+               .withHeader(randomString(10))
+               .withFooter(randomString(10)));
     }
 }
