@@ -31,6 +31,17 @@ public class ContactHelper extends HelperBase {
         submitContactCreation();
     }
 
+    public void addContactToGroup(ContactData contact, GroupData group) {
+        openPage("web.baseUrl");
+        selectContact(contact);
+        selectGroupForContact(group);
+        click(By.xpath("//input[@type='submit']"));
+    }
+
+    private void selectGroupForContact(GroupData group) {
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
+    }
+
     public void selectGroup(GroupData group) {
         if (manager.driver.getCurrentUrl().contains("edit.php")) {
             new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
